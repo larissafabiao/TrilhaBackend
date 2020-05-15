@@ -1,13 +1,9 @@
 package br.com.zup.trilhabackend.mainmenu;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Scanner;
-
 import br.com.zup.trilhabackend.client.Client;
 import br.com.zup.trilhabackend.controllers.Controller;
-import br.com.zup.trilhabackend.connection.*;
+import java.sql.SQLException;
+import java.util.Scanner;
 public class Menu {
 	static Scanner sc = new Scanner(System.in);
 	static Controller ctrl =  new Controller();
