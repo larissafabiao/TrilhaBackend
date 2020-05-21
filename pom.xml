@@ -1,19 +1,46 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>TrilhaBackend</groupId>
   <artifactId>TrilhaBackend</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>TrilhaBackend</name>
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
-        <configuration>
-          <release>13</release>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <packaging>war</packaging>
+  
+   <build>
+    <finalName>Deploy maven project to tomcat example</finalName>       
+       <plugins>
+          <!-- Below plugin will fix web.xml is missing and <failOnMissingWebXml> is set to true error. -->
+          <plugin>
+             <artifactId>maven-war-plugin</artifactId>
+             <version>2.3</version>
+             <configuration>
+               <failOnMissingWebXml>false</failOnMissingWebXml>
+             </configuration>
+          </plugin>
+
+          <!-- Use below plugin to deploy this maven project to tomcat server -->
+          <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat9-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                  <url>http://localhost:8080/manager/text</url>
+                  <path>/myapp</path>
+                  <!-- Set update to ture to avoid exist war package can not be override error -->
+                  <update>true</update>
+                  <username>tomcat</username>
+                  <password>tomcat</password>
+                </configuration>
+           </plugin>
+           <plugin>
+		      <artifactId>maven-compiler-plugin</artifactId>
+		        <configuration>
+		          <source>14</source>
+		          <target>14</target>
+		        </configuration>
+    		</plugin>
+       </plugins>
+   </build>
 </project>

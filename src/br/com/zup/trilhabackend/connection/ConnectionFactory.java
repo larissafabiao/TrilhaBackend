@@ -6,24 +6,18 @@ import javax.servlet.http.*;
 
 
 public class ConnectionFactory extends HttpServlet {
-	private static String message;
-	
-	public void init() throws ServletException {
-		//required initialization
-		message = "Hello World - Servlet";
-	}
-	
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Set response content type
+	public void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException {
 		response.setContentType("text/html");
-		
-		// Actual logic goes here.
-		PrintWriter out = response.getWriter();
-		out.println("<h1>" + message + "</h1>");
-	}
-	
-	public void destroy() {
-		//do nothing
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.println("<html><body>");
+			out.println("<h1>Hello Readers</h1>");
+			out.println("</body></html>");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

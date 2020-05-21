@@ -10,7 +10,7 @@ public class Controller {
 	
 	static Scanner sc = new Scanner(System.in);
 	
-	List<Client> listClient = new LinkedList<>();
+	List<Client> listClient = new LinkedList<Client>();
 
 	
 	//métodos de leitura dos dados
