@@ -1,46 +1,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>TrilhaBackend</groupId>
-  <artifactId>TrilhaBackend</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>TrilhaBackend</name>
-  <packaging>war</packaging>
-  
-   <build>
-    <finalName>Deploy maven project to tomcat example</finalName>       
-       <plugins>
-          <!-- Below plugin will fix web.xml is missing and <failOnMissingWebXml> is set to true error. -->
-          <plugin>
-             <artifactId>maven-war-plugin</artifactId>
-             <version>2.3</version>
-             <configuration>
-               <failOnMissingWebXml>false</failOnMissingWebXml>
-             </configuration>
-          </plugin>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>TrilhaBackend</groupId>
+	<artifactId>TrilhaBackend</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>TrilhaBackend</name>
+	<packaging>war</packaging>
 
-          <!-- Use below plugin to deploy this maven project to tomcat server -->
-          <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat9-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                  <url>http://localhost:8080/manager/text</url>
-                  <path>/myapp</path>
-                  <!-- Set update to ture to avoid exist war package can not be override error -->
-                  <update>true</update>
-                  <username>tomcat</username>
-                  <password>tomcat</password>
-                </configuration>
-           </plugin>
-           <plugin>
-		      <artifactId>maven-compiler-plugin</artifactId>
-		        <configuration>
-		          <source>14</source>
-		          <target>14</target>
-		        </configuration>
-    		</plugin>
-       </plugins>
-   </build>
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>servletTeste</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://localhost:8080/manager/text</url>
+					<server>TomcatServer</server>
+					<path>/servletTeste</path>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
