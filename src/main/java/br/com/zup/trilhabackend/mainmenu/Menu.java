@@ -30,30 +30,30 @@ public class Menu {
 
 			switch (command) {
 			case 1:
-				ctrl.insert();
+				//ctrl.insert();
 				break;
 			case 2:
-				ctrl.printAll();;
+				//ctrl.printAll();;
 				break;
 			case 3:
-				ctrl.printOne(ctrl.search());
+				//ctrl.printOne(ctrl.search());
 				break;
 
 			case 4:
-				ctrl.remove();
+				//ctrl.remove();
 				break;
 			case 5:
-				editMenu();
+				//editMenu();
 			}
 
 		} while (command != 6);
 	}
-	
+/*	
 	//método para execução do menu de edição
 	static void editMenu() {
-		Client wanted = ctrl.search();
+		//Client wanted = ctrl.search();
 		if(wanted != null) {
-		 	ctrl.printOne(wanted);
+		 	//ctrl.printOne(wanted);
 		 	
 		 	int command;
 		 	do {
@@ -83,5 +83,5 @@ public class Menu {
 		} else {	
 			System.out.println("Cliente nÃ£o encontrado.");
 		}		
-	}
+	}*/
 }

@@ -1,8 +1,12 @@
 package br.com.zup.trilhabackend.controllers;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+
+import javax.servlet.http.HttpServletResponse;
 
 import br.com.zup.trilhabackend.client.Client;
 
@@ -10,138 +14,90 @@ public class Controller {
 	
 	static Scanner sc = new Scanner(System.in);
 	
-	List<Client> listClient = new LinkedList<Client>();
+	Map<Long, Client> listClient = new HashMap<Long, Client>();
 
-	
 	//métodos de leitura dos dados
-	String insertCpf() {
-		String cpf;
-		do {
-			System.out.println("Insira o CPF (somento números e letras): ");
-			cpf = sc.next();
-			if(cpf.length() != 11) {
-				System.out.println("Cpf inválido, por favor tente novamente.");
-			}
-		} while(cpf.length() != 11);
-		System.out.println();
+	public String insertCpf(String cpf, int type) {
+		int size = cpf.length() - type;
+    	cpf = cpf.substring(10, size);
+		if(cpf.length() != 11) {
+			cpf = "invalid";
+		}
 		return cpf;
 	}
 	
-	String insertName() {
-		System.out.println("Insira o nome do Cliente: ");
-		sc.nextLine();
-		String name = sc.nextLine();
-		System.out.println();
+	public String insertName(String name) {
+		int size = name.length() -2;
+    	name = name.substring(11, size);
 		return name;
 	}
 	
-	int insertAge() {
-		System.out.println("Insira a idade do cliente: ");
-		int age = sc.nextInt();
-		System.out.println();
-		return age;
+	public int insertAge(String age) {
+		int size = age.length() - 2;
+    	age = age.substring(10, size);
+    	int ageInt = Integer.parseInt(age);
+		return ageInt;
 	}
 	
-	String insertEmail() {
-		String email;
-		do {
-			System.out.println("Insira o e-mail do cliente: ");
-			email = sc.next();
-			if(!email.contains("@") && !email.contains(".com")) {	
-				System.out.println("e-mail inválido, tente novamente.");
-			}
-		} while(!email.contains("@") && !email.contains(".com"));
-		System.out.println();
+	public String insertEmail(String email) {
+		int size = email.length() - 2;
+    	email = email.substring(12, size);
+		if(!email.contains("@") && !email.contains(".com")) {	
+			email = "invalid";
+		}
 		return email;
 	}	
 	
-	String insertAddress() {
-		System.out.println("Insira o endereço do cliente: ");
-		sc.nextLine();
-		String address = sc.nextLine();
-		System.out.println();
+	public String insertAddress(String address) {
+		int size = address.length() - 1;
+    	address = address.substring(13,size);
 		return address;
 	}
 	
 	
 	//métodos para executar as ações básicas
-	public void insert() {
-		String cpf = insertCpf();
-		String name = insertName();
-		int age = insertAge();
-		String email = insertEmail();
-		String addres = insertAddress();
-		
+	public void insert(String cpf, String name, int age, String email, String addres) {
 		Client c = new Client(cpf, name, age, email, addres);
-		
-		listClient.add(c);
+		Long key = Long.valueOf(cpf);
+		listClient.put(key,c);
 	}
 	
-	public void printAll() {
-		for (Client it : listClient) {
-			printClient(it);
-		}
-	}
-	
-	public void printOne(Client wanted) {
+	public void printOne(Client wanted,  HttpServletResponse resp) throws IOException {
 		if(wanted != null) {
-			printClient(wanted);
+			printClient(wanted, resp);
 		} else {	
 			System.out.println("Cliente não encontrado.");
 		}
 	}
 	
-	void printClient(Client c) {
-		System.out.println("-------------------------------------------------");
-		System.out.println("Cliente: " + c.getName() + ", idade: " + c.getAge() + ", CPF: " + c.getCpf());
-		System.out.println("E-mail: " + c.getEmail());
-		System.out.println("Endereço: " + c.getAddress());
-		System.out.println("-------------------------------------------------");
+	void printClient(Client client, HttpServletResponse resp) throws IOException {
+		PrintWriter printWriter = resp.getWriter();
+        printWriter.println("CPF :: " + client.getCpf());
+        printWriter.println("Name :: " + client.getName());
+        printWriter.println("Age :: " + client.getAge());
+        printWriter.println("Email :: " + client.getEmail());
+        printWriter.println("Addres :: " + client.getAddress());
 	}
 	
-	public Client search() {
-		String cpf = insertCpf();
+	public Client search(String cpf) {
 		Client wanted =  null;
-		for (Client valor : listClient) {
-			if(valor.getCpf().equals(cpf)) {
-				wanted = valor;
-				break;
-			}	
+		Long key = Long.valueOf(cpf);
+		if (listClient.containsKey(key)) {
+			wanted = listClient.get(key);
 		}
 		return wanted;
 	}
 	
-	public void remove() {
-		Client delet = search();
-		if (delet != null) {
-			System.out.println("Cliente apagado:: ");
-			printClient(delet);
-			listClient.remove(delet);
-		} else {
-			System.out.println("Cliente não encontrado.");
-		}
+	public void remove(String cpf) {
+		Long key = Long.valueOf(cpf);
+		listClient.remove(key);
 	}
 	
-	
-	//métodos para executar a edição dos dados de um cliente
-	public void editName(Client change) {
-		String newName = insertName();
-		change.setName(newName);
-	}
-	
-	public void editAge(Client change) {
-		int newAge = insertAge();
-		change.setAge(newAge);
-	}
-	
-	public void editEmail(Client change) {
-		String newEmail = insertEmail();
-		change.setEmail(newEmail);
-	}
-	
-	public void editAddress(Client change) {
-		String newAddress = insertAddress();
-		change.setAddress(newAddress);
-	}
-	
+	public void edit(String cpf, String name, int age, String email, String address) {
+		Client wanted = search(cpf);
+    	wanted.setName(name);
+    	wanted.setAddress(address);
+    	wanted.setEmail(email);
+    	wanted.setAge(age);
+   	}
 }
