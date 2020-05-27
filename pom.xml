@@ -29,7 +29,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>servletTeste</finalName>
+		<finalName>loja-marvel</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -38,7 +38,7 @@
 				<configuration>
 					<url>http://localhost:8080/manager/text</url>
 					<server>TomcatServer</server>
-					<path>/servletTeste</path>
+					<path>/loja-marvel</path>
 				</configuration>
 			</plugin>
 			<plugin>

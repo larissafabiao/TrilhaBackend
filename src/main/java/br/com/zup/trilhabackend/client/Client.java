@@ -7,7 +7,10 @@ public class Client {
 	    private String email;
 	    private String address;
 	    
-	    
+	    public Client() {
+			super();
+		}
+
 	    public Client(String cpf, String name, int age, String email, String address) {
 	 		this.cpf = cpf;
 	 		this.name = name;
@@ -16,11 +19,18 @@ public class Client {
 	 		this.address = address;
 	 	}
 	    
+	    @Override
+		public String toString() {
+			return "Client [cpf=" + cpf + ", name=" + name + ", age=" + age + ", email=" + email + ", address="
+					+ address + "]";
+		}
+	    
+	    //métodos GET
 	    public String getCpf() {
 	    	return cpf;
 	    }
 	    
-	    public String getName() {
+		public String getName() {
 	    	return name;
 	    }
 	    
@@ -36,6 +46,7 @@ public class Client {
 	    	return address;
 	    }
 	   
+	    //métodos SET
 	    public void setName(String newName) {
 	    	this.name = newName;
 	    }
