@@ -16,12 +16,4 @@ public class connectionFactory {
          
         return conexao;
     }
-	
-	public Connection getConnection() {
-        try {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/helloworld?serverTimezone=UTC", "root", "admin");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

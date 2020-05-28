@@ -1,6 +1,7 @@
 package br.com.zup.trilhabackend.mainmenu;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -13,42 +14,16 @@ public class Menu {
 	public static void main(String[] args) throws SQLException {
 		Connection connection = new connectionFactory().createConnection();
 	    System.out.println("Conexão aberta!");
+	    
+	    String sql = "insert into clients " + "(cpf,name,age,email,address) " + "values (?,?,?,?,?)";
+	    PreparedStatement stmt = connection.prepareStatement(sql);
+	    // preenche os valores
+	    stmt.setString(1, "49669162831");
+	    stmt.setString(2, "Larissa Fabiao");
+	    stmt.setInt(3, 19);
+	    stmt.setString(3, "larissafabiao@gmail.com");
+	    stmt.setString(4, "R. Vergueiro 3185 cj57");
+	    
 	    connection.close();
 	}
-/*	
-	//método para execução do menu de edição
-	static void editMenu() {
-		//Client wanted = ctrl.search();
-		if(wanted != null) {
-		 	//ctrl.printOne(wanted);
-		 	
-		 	int command;
-		 	do {
-		    	   System.out.println("** Use 1 para modificar o nome do cliente");
-		           System.out.println("** Use 2 para modificar a idade do cliente");
-		           System.out.println("** Use 3 para modificar o e-mail do cliente");
-		           System.out.println("** Use 4 para alterar o endereÃ§o do cliente");
-		           System.out.println("** Use 5 para voltar ao menu principal");
-		           
-		          command = sc.nextInt();
-		          
-		          switch (command){
-		            	case 1:
-		            		ctrl.editName(wanted);
-		            		break;
-		            	case 2: 
-		            		ctrl.editAge(wanted);
-		            		break;
-		            	case 3:
-		            		ctrl.editEmail(wanted);
-		            		break;
-		            	case 4: 
-		            		ctrl.editAddress(wanted);
-		            		break;
-		            }
-		       } while( command != 5);
-		} else {	
-			System.out.println("Cliente nÃ£o encontrado.");
-		}		
-	}*/
 }
