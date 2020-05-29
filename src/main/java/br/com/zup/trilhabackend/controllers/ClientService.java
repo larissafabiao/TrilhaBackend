@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.zup.trilhabackend.client.Client;
+import br.com.zup.trilhabackend.jdbc.ContatoDao;
 
 public class ClientService {
 	
 	Map<Long, Client> listClient = new HashMap<Long, Client>();
-
+	//ContatoDao dao = new ContatoDao();
+	
 	//métodos de validação dos dados lidos
 	public String validateCpf(String cpf) {
 		if(cpf.length() != 11) {
@@ -51,8 +53,10 @@ public class ClientService {
 		Client newClient = new Client();
 		newClient = client;
 		Long key = Long.valueOf(newClient.getCpf());
+		//dao.insert(newClient);
 		listClient.put(key,newClient);
 	}
+
 	
 	public Client search(String cpf) {
 		Client wanted =  null;

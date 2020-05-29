@@ -7,13 +7,13 @@ import java.sql.SQLException;
 public class connectionFactory {
 
 	public Connection createConnection() throws SQLException{
-        String url = "jdbc:mysql://localhost:3306/helloworld?serverTimezone=UTC"; //Nome da base de dados
-        String user = "root"; //nome do usuário do MySQL
-        String password = "admin"; //senha do MySQL
-         
-        Connection conexao = null;
-        conexao = DriverManager.getConnection(url, user, password);
-         
-        return conexao;
-    }
+		String url = "jdbc:mysql://localhost:3306/helloworld?serverTimezone=UTC"; //Nome da base de dados
+		String user = "root"; //nome do usuário do MySQL
+		String password = "admin"; //senha do MySQL
+
+		Connection conexao = null;
+		conexao = DriverManager.getConnection(url, user, password);
+
+		return conexao;
+	}
 }
