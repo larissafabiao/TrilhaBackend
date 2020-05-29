@@ -15,7 +15,7 @@ public class ContatoDao {
 
 	public ContatoDao() {
 		try {
-			this.connection = new connectionFactory().createConnection();
+			this.connection = new ConnectionFactory().createConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
