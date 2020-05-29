@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import br.com.zup.trilhabackend.client.Client;
 
 public class ContatoDao {
@@ -16,7 +13,7 @@ public class ContatoDao {
 	public ContatoDao() {
 		try {
 			this.connection = new ConnectionFactory().createConnection();
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -44,28 +41,26 @@ public class ContatoDao {
 		}
 	}
 
-	public Map<Long, Client> getLista(){
+	public Client getClient(String cpf){
 		try {
-			Map<Long, Client> clients = new HashMap<Long, Client>();
-			PreparedStatement stmt = this.connection.prepareStatement("select * from clients");
+			PreparedStatement stmt = this.connection.prepareStatement("select * from clients where cpf=?");
+			stmt.setString(1, cpf);
+
 			ResultSet rs = stmt.executeQuery();
 
-			while (rs.next()) {
-				// criando o objeto Contato
-				Client newClient = new Client(rs.getString("cpf"), rs.getString("name"), rs.getInt("age"), rs.getString("email"), rs.getString("address"));
-				Long key = Long.valueOf(newClient.getCpf());
-				clients.put(key, newClient);
+			if(rs != null && rs.next()) {
+				Client client = new Client(rs.getString("cpf"), rs.getString("name"), rs.getInt("age"), rs.getString("email"), rs.getString("address"));
 				rs.close();
 				stmt.close();
-				return clients;
-			}    
+				return client;
+			} 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 		return null;
 	}
 
-	public void altera(Client clients) {
+	public void edit(Client clients) {
 		String sql = "update clients set name=?, age=?, email=?, " +
 				"address=? where cpf=?";
 		try {
@@ -83,10 +78,10 @@ public class ContatoDao {
 		}
 	}
 
-	public void remove(Client clientToRemove) {
+	public void remove(String cpf) {
 		try {
 			PreparedStatement stmt = connection.prepareStatement("delete from clients where cpf=?");
-			stmt.setString(1, clientToRemove.getCpf());
+			stmt.setString(1, cpf);
 			stmt.execute();
 			stmt.close();
 		} catch (SQLException e) {

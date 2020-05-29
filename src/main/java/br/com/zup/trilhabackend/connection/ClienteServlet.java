@@ -3,7 +3,6 @@ package br.com.zup.trilhabackend.connection;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,32 +18,33 @@ import br.com.zup.trilhabackend.jdbc.ContatoDao;
 
 @WebServlet(urlPatterns = "/Clientes/*", name = "loja-marvel")
 public class ClienteServlet extends HttpServlet {
-
+	ContatoDao dao = new ContatoDao();
     private static final long serialVersionUID = 3993201784881460345L;
     ClientService ctrl =  new ClientService();
 
 	//Método GET para ler um cliente específico
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
     	try {
-    		//pegando o cpf da URL
+    		//pegando o cpf da URL e validando-o
     		String uri = req.getRequestURI();
     		int indexParam = uri.lastIndexOf("/");
     		String cpf = uri.substring(indexParam + 1);
-    		
-			cpf = ctrl.validateCpf(cpf);
-	    	
-			PrintWriter printWriter = resp.getWriter();
 			
+    		cpf = ctrl.validateCpf(cpf);
+	    	
+    		//definindo a resposta da requisição
+			PrintWriter printWriter = resp.getWriter();
 			resp.setContentType("application/json");
 			
 			if(cpf == "invalid") {
 	    		printWriter.print("CPF inválido");
 			} else {
 				Gson gson = new Gson();
-				Client wanted = ctrl.search(cpf);
-				if (wanted != null) {
-					printWriter.print(gson.toJson(wanted));
-					//printWriter.print(url);
+				Client clientWanted = new Client();
+				clientWanted = dao.getClient(cpf);
+				
+				if (clientWanted != null) {
+					printWriter.print(gson.toJson(clientWanted));
 				} else {
 					printWriter.print("Cliente não encontrado");
 				}
@@ -57,28 +57,26 @@ public class ClienteServlet extends HttpServlet {
     
     //Método POST para inserir um cliente
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    	//BufferedReader br;
-    	
     	Client clientToBeInserted = new Client();
-    	ContatoDao dao = new ContatoDao();
     	Gson gson = new Gson();
     	
     	clientToBeInserted = gson.fromJson(new InputStreamReader(req.getInputStream()), Client.class);
-    	//System.out.println(clientToBeInserted);
     	
+    	//Validações dos dados do novo cliente
     	String cpf = ctrl.validateCpf(clientToBeInserted.getCpf());
     	String name = ctrl.validateName(clientToBeInserted.getName());
     	int age = ctrl.validateAge(clientToBeInserted.getAge());
     	String email = ctrl.validateEmail(clientToBeInserted.getEmail());
     	String address = ctrl.validateAddress(clientToBeInserted.getAddress());
     	
+    	//difinição da resposta e confirmação da inserção ou não
     	resp.setContentType("application/json");
     	PrintWriter printWriter = resp.getWriter();
+    	
     	if (cpf == "invalid" || name == "invalid" || email == "invalid" || age == -1 || address == "invalid" ) {
     		printWriter.print("Cliente inválido, não inserido.");
     	} else {
     		dao.insert(clientToBeInserted);
-    		//ctrl.insert(clientToBeInserted);
     		printWriter.print("Cliente inserido");
     	}
     }
@@ -96,6 +94,7 @@ public class ClienteServlet extends HttpServlet {
     	
     	clientToBeInserted = gson.fromJson(new InputStreamReader(req.getInputStream()), Client.class);
     	
+    	//Validações dos dados do novo cliente
     	String cpfFromJson = ctrl.validateCpf(clientToBeInserted.getCpf());
     	String name = ctrl.validateName(clientToBeInserted.getName());
     	int age = ctrl.validateAge(clientToBeInserted.getAge());
@@ -105,15 +104,13 @@ public class ClienteServlet extends HttpServlet {
     	//comparação para checar se ambos os cpfs são os mesmos
     	int compareTo = cpf.compareTo(cpfFromJson);
     	
+    	//definição da resposta
     	resp.setContentType("application/json");
     	PrintWriter printWriter = resp.getWriter();
     	if (cpfFromJson == "invalid" || compareTo != 0|| name == "invalid" || email == "invalid" || age == -1 || address == "invalid" ) {
-    		printWriter.println("Cliente inválido, não inserido.");
-    		printWriter.print("cpf=" + cpf + ", cpfFromJson= " + cpfFromJson + ", compareTo=" + compareTo);
+    		printWriter.println("Cliente inválido ou informações conflitantes. O cliente não foi editado");
     	} else {
-    		ContatoDao dao = new ContatoDao();
-    		dao.altera(clientToBeInserted);
-    		//ctrl.edit(clientToBeInserted);
+    		dao.edit(clientToBeInserted);
 	        printWriter.print("Cliente portador do cpf: "+ cpf +" atualizado");
     	}
     }
@@ -133,7 +130,7 @@ public class ClienteServlet extends HttpServlet {
 		if (cpf == "invalid") {
     		printWriter.print("CPF inválido");
     	} else {
-    		ctrl.remove(cpf);
+        	dao.remove(cpf);
     	    printWriter.print("Cliente portador do cpf: "+ cpf +" foi removido");
     	}
     }
